@@ -643,7 +643,7 @@ public class SentinelConnectionManager extends MasterSlaveConnectionManager {
     private boolean isUseSameMaster(RedisURI slaveAddr, String slaveMasterHost, String slaveMasterPort) {
         RedisURI master = currentMaster.get();
         RedisURI slaveMaster = toURI(slaveMasterHost, slaveMasterPort);
-        if (!master.equals(slaveMaster)) {
+        if (!resolveIP(master).syncUninterruptibly().getNow().equals(resolveIP(slaveMaster).syncUninterruptibly().getNow())) {
             return false;
         }
         return true;
